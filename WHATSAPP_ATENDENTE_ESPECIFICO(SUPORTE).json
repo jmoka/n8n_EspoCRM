@@ -1,0 +1,326 @@
+{
+  "name": "ChamarSuporte",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "87692412-aa11-4ea0-a895-64a25121f62a",
+              "name": "mensagem",
+              "value": "={{ $json.dados.Mensagem }}",
+              "type": "string"
+            },
+            {
+              "id": "fe87c0c9-d111-4ea0-97be-9be86f9887cc",
+              "name": "INSTANCIA",
+              "value": "={{ $json.dados.numeroInstancia.split(\"@\")[0] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -368,
+        -208
+      ],
+      "id": "75764e41-7aed-405a-ada3-1ddc235e051e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "options": {
+          "maxOutputTokens": 1024,
+          "temperature": 0.4,
+          "topK": 20,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        224,
+        -32
+      ],
+      "id": "d392f6e7-ae3d-45a9-9f75-d9b173b4b18e",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "141ifzSHRqqToKxL",
+          "name": "Gemini_Bacu"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "={{ $json.mensagem }}",
+        "key": "={{ $('Suporte').item.json.dados.NumeroCliente }}",
+        "options": {
+          "dotNotation": true
+        }
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        -208
+      ],
+      "id": "cb2c8788-2548-4335-886e-eeb3c9ae7e5f",
+      "name": "Redis",
+      "credentials": {
+        "redis": {
+          "id": "rpCOUi93P9cj2fqI",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        -208
+      ],
+      "id": "28918cc7-b611-42c0-9d50-48b7ebe10371",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a148d85a-28b0-43e5-8356-29727530cefd",
+              "name": "ultimaMSG",
+              "value": "={{ $('Edit Fields').item.json.mensagem }}",
+              "type": "string"
+            },
+            {
+              "id": "58d87682-5fd6-4e65-8cbf-bfad50652392",
+              "name": "historioco",
+              "value": "={{ $json.data[0].msg.map(item => JSON.parse(item).mensagem).join(\"\\n\") }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        80,
+        -208
+      ],
+      "id": "6afbfba3-c323-4ef5-acc6-95112946b6dd",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.ultimaMSG }}, {{ $json.historioco }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=oi [nome do suporte] o cliente esta solicitando atendimento"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        224,
+        -208
+      ],
+      "id": "651b4daa-842d-4208-a42b-42e8c6663486",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e4e75204-e8eb-4ac4-8e03-f1b2ab90be65",
+              "name": "Tributacao",
+              "value": "={{ $json.output.labels[0] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        512,
+        -208
+      ],
+      "id": "23b6dade-c34e-45a3-ad2a-3590c771fc3c",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\n  \"type\": \"object\",\n\n  \"properties\": {\n\n    \"labels\": {\n\n      \"type\": \"array\",\n\n      \"items\": {\n\n        \"type\": \"string\",\n\n        \"enum\": [\"Fiscal\", \"Financeiro\", \"Folha de Pagamento, Legalização e Alvará,Contador\"]\n\n      }\n\n    }\n\n  },\n\n  \"required\": [\"labels\"]\n\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        368,
+        -32
+      ],
+      "id": "534d8050-771c-4220-b5f0-8ed3afb9f9b6",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "dados",
+              "type": "object"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -528,
+        -208
+      ],
+      "id": "a0212f3c-1d79-467f-b7bb-ec1d9621c08b",
+      "name": "Suporte"
+    }
+  ],
+  "pinData": {
+    "Suporte": [
+      {
+        "json": {
+          "dados": {
+            "camposIniciais": "{\"key\":{\"remoteJid\":\"559196293532@s.whatsapp.net\",\"fromMe\":false,\"id\":\"0EA044330C3C65930F299B0F58121A70\"},\"pushName\":\"Jota Empresas\",\"status\":\"DELIVERY_ACK\",\"message\":{\"messageContextInfo\":{\"deviceListMetadata\":{\"senderKeyHash\":\"bj39Q4UXS5VTdw==\",\"senderTimestamp\":\"1755081778\",\"recipientKeyHash\":\"+CES1QNUilc/6Q==\",\"recipientTimestamp\":\"1755081499\"},\"deviceListMetadataVersion\":2,\"messageSecret\":\"iNv6zwoEEseZ5ruOm/8BHaMFc4JkFkSW8MdiE942Jn4=\"},\"conversation\":\"Fiscal\"},\"contextInfo\":{\"expiration\":0,\"ephemeralSettingTimestamp\":\"1722438233\",\"disappearingMode\":{\"initiator\":\"CHANGED_IN_CHAT\",\"trigger\":\"UNKNOWN\",\"initiatedByMe\":false}},\"messageType\":\"conversation\",\"messageTimestamp\":1755890338,\"instanceId\":\"0aaf2f65-5273-4165-8984-802e12c3e667\",\"source\":\"android\"}",
+            "menssageType": "conversation",
+            "NumeroCliente": "559196293532@s.whatsapp.net",
+            "numeroInstancia": "559185700436@s.whatsapp.net",
+            "Mensagem": "Fiscal"
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Redis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        []
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Suporte": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ddc6226a-fad9-4943-820f-f951fbc5de1c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8d6a81903df25a55a6d6de4c95daa350b74c6e400ef38aa531aa16f227a14a4d"
+  },
+  "id": "tkLuAUjLznNC7dph",
+  "tags": []
+}
