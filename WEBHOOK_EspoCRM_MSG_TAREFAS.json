@@ -1,5 +1,5 @@
 {
-  "name": "Consulta_Update_Tarefas",
+  "name": "WEBHOOK_EspoCRM_MSG_TAREFAS",
   "nodes": [
     {
       "parameters": {
@@ -302,7 +302,7 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        1744,
+        2032,
         192
       ],
       "id": "1dc7a6a4-9167-4526-a7db-d733b1f4b9c8",
@@ -746,7 +746,7 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.5,
       "position": [
-        1504,
+        1792,
         192
       ],
       "id": "86d71362-5600-4633-bebf-f1dfbb716351",
@@ -758,39 +758,6 @@
           "name": "MySQL account"
         }
       }
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "{{ $json.appi_evolution }}{{ $json.instancia }}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "apikey",
-              "value": "429683C4C977415CAAFCCE10F7D57E11"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"number\": \"{{ $('Telefone_Cliente').item.json.numeric }}\",\n  \"text\": \"*JOTA CONTABILIDADE*\\n*_Comunica_*\\n*=============*\\n*Empresa :* {{ $('Empresa').item.json.name.replace(/(\\r\\n|\\n|\\r|\\t)/g, ' ') }}\\n*Criador :* {{ $('DADOS_INICIAIS').item.json.usuarioCriador }}\\n*Responsável :* {{ $('DADOS_INICIAIS').item.json.usuarioNOME_Modificador }}\\n*Tarefa :* {{ $('Tarefa').item.json.name }}\\n*Descrição :* {{ $('Tarefa').item.json.description.split(/(\\r\\n|\\n|\\r)/).filter(line => line.trim() !== '').join('\\\\n') }}\\n*Link :* https://jotaempresas.com/crm/#Task/view/{{ $('Tarefa').item.json.id }}\\n*===================*\\n_CARO CLIENTE *{{ $('Responsavel').item.json.first_name }} {{ $('Responsavel').item.json.last_name }}* VEJA A MENSAGEM ABAIXO_\\nWhatsApp (---)\\n*Entre em Contato :* https://wa.me/5591996293532?text={{ encodeURIComponent('Gostaria de saber sobre a *Tarefa :* ' + $('Tarefa').item.json.name) }}\"\n}\n",
-        "options": {
-          "redirect": {
-            "redirect": {
-              "followRedirects": false
-            }
-          }
-        }
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        1280,
-        32
-      ],
-      "id": "17f107d3-d69c-4a57-9899-c0bff857f235",
-      "name": "ENVIA_WHATSAPP"
     },
     {
       "parameters": {},
@@ -2579,12 +2546,62 @@
     },
     {
       "parameters": {
+        "method": "POST",
+        "url": "={{ $('DADOS_INICIAIS').item.json.appi_evolution }}{{ $('DADOS_INICIAIS').item.json.instancia }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "\"5591996293532\""
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "429683C4C977415CAAFCCE10F7D57E11"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "=5591996293532"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.Mensagem }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1232,
+        192
+      ],
+      "id": "1da2aedf-6138-443b-a215-3f68520c24ec",
+      "name": "EnviarMSG_ADMIN"
+    },
+    {
+      "parameters": {
         "assignments": {
           "assignments": [
             {
-              "id": "1ef6b616-be4e-49da-865d-d1b66b5100c8",
-              "name": "msg",
-              "value": "={{ $json.post }}",
+              "id": "13399ff7-91cc-4642-8089-d7f581b64e62",
+              "name": "=Mensagem",
+              "value": "=*Empresa : 🏢* {{$('Empresa').item.json.name.replace(/(\\r\\n|\\n|\\r|\\t)/g, ' ') }}\n*Criador : 👨‍💻 * {{$('DADOS_INICIAIS').item.json.usuarioCriador }}\n*Responsável :👤* {{$('DADOS_INICIAIS').item.json.usuarioNOME_Atribuido }}\n*===================*\n*Tarefa : 📝* {{ $('Tarefa').item.json.name}}\n=\n*Descrição : 📑* {{$('Tarefa').item.json.description.split(/\\r\\n|\\n|\\r/).filter(line => line.trim() !== '' && line.trim() !== '-').join('\\n') }}\n*===================*\n*Link : 🔗* https://jotaempresas.com/crm/#Task/view/{{$('Tarefa').item.json.id}}\n*===================*\n*Mensagem Enviada : ✉️* {{ $json.post.replace(/\\(.*?\\)/g, '').replace(/(\\r\\n|\\n|\\r)/g, ' ').trim() }}  \n*WhatsApp: 🟢* {{ ($json.post.match(/\\((.*?)\\)/) || [])[1] || '' }}\n\n\n",
               "type": "string"
             }
           ]
@@ -2594,16 +2611,48 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1008,
-        -64
+        1040,
+        192
       ],
-      "id": "92289f29-cfb4-4e3f-96ce-13c47bc3a53c",
-      "name": "Edit Fields"
+      "id": "2b7d61e4-d582-4750-bb3a-e563cc456404",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "13399ff7-91cc-4642-8089-d7f581b64e62",
+              "name": "=Mensagem",
+              "value": "=*JOTA CONTABILIDADE*\n*_Comunica_* 🚨\n*=====================*\n*Empresa : 🏢* {{$('Empresa').item.json.name.replace(/(\\r\\n|\\n|\\r|\\t)/g, ' ') }}\n*Criador : 👨‍💻 * {{$('DADOS_INICIAIS').item.json.usuarioCriador }}\n*Responsável :👤* {{$('DADOS_INICIAIS').item.json.usuarioNOME_Atribuido }}\n*===================*\n*Tarefa : 📝* {{ $('Tarefa').item.json.name}}\n*===================*\n*Link : 🔗* https://jotaempresas.com/crm/#Task/view/{{$('Tarefa').item.json.id}}\n*===================*\n⚠️ Ola *{{ $('Responsavel').item.json.first_name }} {{ $('Responsavel').item.json.last_name }}* Observe a Mensagem Abaixo\n👇👇👇👇\n*WhatsApp: 🟢* {{ ($('Loop Over Items1').item.json.post.match(/\\((.*?)\\)/) || [])[1] || '' }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1424,
+        192
+      ],
+      "id": "0f482772-fc14-41c3-bb64-a0966534b26a",
+      "name": "Edit Fields2"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "{{ $json.appi_evolution }}{{ $json.instancia }}",
+        "url": "={{ $('DADOS_INICIAIS').item.json.appi_evolution }}{{ $('DADOS_INICIAIS').item.json.instancia }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "\"5591996293532\""
+            }
+          ]
+        },
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -2614,60 +2663,91 @@
           ]
         },
         "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"number\": \"5591996293532\",\n  \"text\": \"*Empresa :* {{ $('Empresa').item.json.name.replace(/(\\r\\n|\\n|\\r|\\t)/g, ' ') }}\\n*Criador :* {{ $('DADOS_INICIAIS').item.json.usuarioCriador }}\\n*Responsável :* {{ $('DADOS_INICIAIS').item.json.usuarioNOME_Atribuido }}\\n*Tarefa :* {{ $('Tarefa').item.json.name }}\\n*Descrição :* {{ $('Tarefa').item.json.description.split(/(\\r\\n|\\n|\\r)/).filter(line => line.trim() !== '').join('\\\\n') }}\\n*Link :* https://jotaempresas.com/crm/#Task/view/{{ $('Tarefa').item.json.id }}\\n*===================*\\n*Mensagem Enviada :* {{ $json.post.split(/(\\r\\n|\\n|\\r)/).filter(line => line.trim() !== '').map(line => line.match(/\\(.*\\)/) ? '*WhatsApp :* ' + line.match(/\\(.*\\)/)[0] : line).join('\\\\n') }}\"\n}\n",
-        "options": {
-          "redirect": {
-            "redirect": {
-              "followRedirects": false
-            }
-          }
-        }
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        1024,
-        192
-      ],
-      "id": "ffd35d54-dce4-47ff-b30a-ebfa0b7dd083",
-      "name": "tatiana4"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "{{ $json.appi_evolution }}{{ $json.instancia }}",
-        "sendHeaders": true,
-        "headerParameters": {
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "apikey",
-              "value": "429683C4C977415CAAFCCE10F7D57E11"
+              "name": "number",
+              "value": "=5591996293532"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.Mensagem }}\n"
             }
           ]
         },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={ \"number\": \"5591996293532\", \"text\": \"*JOTA CONTABILIDADE*\\n*_Comunica_*\\n*=============*\\n*Empresa :* {{ $('Empresa').item.json.name.replace(/(\\r\\n|\\n|\\r|\\t)/g, ' ') }}\\n*Criador :* {{ $('DADOS_INICIAIS').item.json.usuarioCriador }}\\n*Responsável :* {{ $('DADOS_INICIAIS').item.json.usuarioNOME_Atribuido }}\\n*Tarefa :* {{ $('Tarefa').item.json.name }}\\n*Descrição :* {{ $('Tarefa').item.json.description.split(/(\\r\\n|\\n|\\r)/).filter(line => line.trim() !== '').join('\\\\n') }}\\n*Link :* https://jotaempresas.com/crm/#Task/view/{{ $('Tarefa').item.json.id }}\\n*===================*\\n_CARO CLIENTE *{{ $('Responsavel').item.json.first_name }} {{ $('Responsavel').item.json.last_name }}* VEJA A MENSAGEM ABAIXO_\\n*WhatsApp :* {{ $('Posts_0').item.json.post.replace(/\\(.*?\\)/g, '').trim() }}\\n*Entre em Contato :* https://wa.me/5591996293532?text={{ encodeURIComponent('Gostaria de saber sobre a *Tarefa :* ' + $('Tarefa').item.json.name) }}\" }",
         "options": {
           "redirect": {
-            "redirect": {
-              "followRedirects": false
-            }
+            "redirect": {}
           }
         }
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1264,
+        1600,
         192
       ],
-      "id": "2fe5af6b-a254-45e8-a834-4059582aba0d",
-      "name": "ENVIA_WHATSAPP1"
+      "id": "19b43d64-4349-49a5-83f7-4d51212f300d",
+      "name": "WhatsApp_Cliente"
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n108-n8n.it1327.easypanel.host",
+            "content-length": "568",
+            "accept": "*/*",
+            "content-type": "application/json",
+            "signature": "NjhiNjEyMGU4NTAxZWFjNzQ6MjFjODRhYmMxNjU1MGVjNTk1ZDEyYmI5MThlYzYxMjA0MjQyZDAwMTBmNWZmNzM1MjllOTU3NDI0NmU5ODVmMA==",
+            "x-forwarded-for": "199.79.62.228",
+            "x-forwarded-host": "n8n108-n8n.it1327.easypanel.host",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "d54abd6f78ad",
+            "x-real-ip": "199.79.62.228",
+            "x-signature": "NjhiNjEyMGU4NTAxZWFjNzQ6IchKvBZVDsWV0Su5GOxhIEJC0AEPX/c1KelXQkbphfA=",
+            "accept-encoding": "gzip"
+          },
+          "params": {},
+          "query": {},
+          "body": [
+            {
+              "priority": "High",
+              "reminders": [],
+              "parentName": "JOÃO LUIZ SILVA TAVARES 59.234.834",
+              "followersIds": [
+                "67b616e69b27e690f",
+                "67b620584847c6af9"
+              ],
+              "followersNames": {
+                "67b616e69b27e690f": "Contador _JOTA",
+                "67b620584847c6af9": "Depart_ Prefeitura(Licenças)"
+              },
+              "id": "6866e2445e1ad5c99"
+            },
+            {
+              "priority": "Low",
+              "reminders": [],
+              "parentName": "JOÃO LUIZ SILVA TAVARES 59.234.834",
+              "followersIds": [
+                "67b616e69b27e690f",
+                "67b620584847c6af9"
+              ],
+              "followersNames": {
+                "67b616e69b27e690f": "Contador _JOTA",
+                "67b620584847c6af9": "Depart_ Prefeitura(Licenças)"
+              },
+              "id": "6866e2445e1ad5c99"
+            }
+          ],
+          "webhookUrl": "https://n8n108-n8n.it1327.easypanel.host/webhook/4169860961d23e865edeb31231aa5a01",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
   "connections": {
     "Webhook": {
       "main": [
@@ -2786,7 +2866,7 @@
       "main": [
         [
           {
-            "node": "tatiana4",
+            "node": "Edit Fields1",
             "type": "main",
             "index": 0
           }
@@ -2900,11 +2980,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "ENVIA_WHATSAPP": {
-      "main": [
-        []
       ]
     },
     "ATUALIZA_MSG_ENVIADA_2": {
@@ -3327,23 +3402,40 @@
         ]
       ]
     },
-    "Edit Fields": {
-      "main": [
-        []
-      ]
-    },
-    "tatiana4": {
+    "EnviarMSG_ADMIN": {
       "main": [
         [
           {
-            "node": "ENVIA_WHATSAPP1",
+            "node": "Edit Fields2",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "ENVIA_WHATSAPP1": {
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "EnviarMSG_ADMIN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp_Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp_Cliente": {
       "main": [
         [
           {
@@ -3359,8 +3451,9 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "15bf0b3c-f8ec-41d2-bf89-42347016efe6",
+  "versionId": "0a7a7ff7-238f-4679-a2e1-7399acfc6246",
   "meta": {
+    "templateCredsSetupCompleted": true,
     "instanceId": "8d6a81903df25a55a6d6de4c95daa350b74c6e400ef38aa531aa16f227a14a4d"
   },
   "id": "eiUmoB6qVXNU7Qhy",
