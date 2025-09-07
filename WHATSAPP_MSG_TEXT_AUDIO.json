@@ -1,5 +1,5 @@
 {
-  "name": "JOTA_MSG_TEXT_AUDIO",
+  "name": "WHATSAPP_MSG_TEXT_AUDIO",
   "nodes": [
     {
       "parameters": {
@@ -594,7 +594,7 @@
     },
     {
       "parameters": {
-        "method": "POST",
+        "method": "=POST",
         "url": "={{ $('camposIniciais').item.json.api_Evolution }}/message/sendText/{{ $('camposIniciais').item.json.instancia }}",
         "sendHeaders": true,
         "headerParameters": {
@@ -1299,7 +1299,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "{{ $('camposIniciais').item.json.api_Evolution }}/message/sendText/{{ $('camposIniciais').item.json.instancia }}",
+        "url": "={{ $('camposIniciais').item.json.api_Evolution }}/message/sendText/{{ $('camposIniciais').item.json.instancia }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -1329,7 +1329,7 @@
     },
     {
       "parameters": {
-        "method": "POST",
+        "method": "=POST",
         "url": "{{ $('camposIniciais').item.json.api_Evolution }}/message/sendText/{{ $('camposIniciais').item.json.instancia }}",
         "sendHeaders": true,
         "headerParameters": {
@@ -1785,7 +1785,7 @@
     },
     {
       "parameters": {
-        "method": "POST",
+        "method": "=POST",
         "url": "{{ $('camposIniciais').item.json.api_Evolution }}/message/sendText/{{ $('camposIniciais').item.json.instancia }}",
         "sendHeaders": true,
         "headerParameters": {
@@ -1839,8 +1839,8 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -3664,
-        -480
+        -3648,
+        -592
       ],
       "id": "f2eb8069-21f4-4e27-a0af-2aff9e800a96",
       "name": "Bloquear Cliente",
@@ -1855,7 +1855,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "{{ $('camposIniciais').item.json.api_Evolution }}/message/sendText/{{ $('camposIniciais').item.json.instancia }}",
+        "url": "={{ $('camposIniciais').item.json.api_Evolution }}/message/sendText/{{ $('camposIniciais').item.json.instancia }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -2079,7 +2079,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "{{ $('camposIniciais').item.json.api_Evolution }}/message/sendText/{{ $('camposIniciais').item.json.instancia }}",
+        "url": "={{ $('camposIniciais').item.json.api_Evolution }}/message/sendText/{{ $('camposIniciais').item.json.instancia }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -2453,7 +2453,7 @@
       "typeVersion": 1,
       "position": [
         2592,
-        -288
+        -400
       ],
       "id": "6dac778c-85d3-49ff-8371-51f9c1db3d12",
       "name": "deletar texto1",
@@ -2472,7 +2472,7 @@
           "headers": {
             "host": "n8n108-n8n.it1327.easypanel.host",
             "user-agent": "axios/1.7.9",
-            "content-length": "1089",
+            "content-length": "821",
             "accept-encoding": "gzip, compress, deflate, br",
             "content-type": "application/json",
             "x-forwarded-for": "172.18.0.1",
@@ -2489,47 +2489,37 @@
             "instance": "jota",
             "data": {
               "key": {
-                "remoteJid": "559196293532@s.whatsapp.net",
-                "fromMe": false,
-                "id": "87B8DED5F8BA3B936714E4C5E12E0B69"
+                "remoteJid": "4917650563460@s.whatsapp.net",
+                "fromMe": true,
+                "id": "9771DE1EC650695E8E549EFB46F9D1FB"
               },
-              "pushName": "Jota Empresas",
-              "status": "DELIVERY_ACK",
+              "pushName": "João Tavares",
+              "status": "SERVER_ACK",
               "message": {
-                "messageContextInfo": {
-                  "deviceListMetadata": {
-                    "senderKeyHash": "bj39Q4UXS5VTdw==",
-                    "senderTimestamp": "1756378809",
-                    "recipientKeyHash": "+CES1QNUilc/6Q==",
-                    "recipientTimestamp": "1756379022"
-                  },
-                  "deviceListMetadataVersion": 2,
-                  "messageSecret": "sksDIynAa/I/g7dli9whKGMlNBuNoIUisjZfL676/p4="
-                },
-                "conversation": "Joao"
+                "conversation": "Oi mana"
               },
               "contextInfo": {
-                "expiration": 0,
-                "ephemeralSettingTimestamp": "1722438233",
+                "expiration": 7776000,
+                "ephemeralSettingTimestamp": "1754225236",
                 "disappearingMode": {
-                  "initiator": "CHANGED_IN_CHAT",
-                  "trigger": "UNKNOWN",
-                  "initiatedByMe": false
+                  "initiator": "INITIATED_BY_ME",
+                  "trigger": "ACCOUNT_SETTING",
+                  "initiatedByMe": true
                 }
               },
               "messageType": "conversation",
-              "messageTimestamp": 1756688555,
+              "messageTimestamp": 1757256061,
               "instanceId": "0aaf2f65-5273-4165-8984-802e12c3e667",
               "source": "android"
             },
-            "destination": "https://n8n108-n8n.it1327.easypanel.host/webhook-test/mensagem",
-            "date_time": "2025-08-31T22:02:35.942Z",
+            "destination": "https://n8n108-n8n.it1327.easypanel.host/webhook/mensagem",
+            "date_time": "2025-09-07T11:41:01.366Z",
             "sender": "559185700436@s.whatsapp.net",
             "server_url": "https://evolution-evolution-api.it1327.easypanel.host",
             "apikey": "83DEED54D2BE-4CED-9E7C-80DEFD496AFB"
           },
-          "webhookUrl": "https://n8n108-n8n.it1327.easypanel.host/webhook-test/mensagem",
-          "executionMode": "test"
+          "webhookUrl": "https://n8n108-n8n.it1327.easypanel.host/webhook/mensagem",
+          "executionMode": "production"
         }
       }
     ]
@@ -3110,7 +3100,7 @@
         ],
         [
           {
-            "node": "Bloquear Cliente",
+            "node": "MSG Bloqueio",
             "type": "main",
             "index": 0
           }
@@ -3214,13 +3204,7 @@
     },
     "Bloquear Cliente": {
       "main": [
-        [
-          {
-            "node": "MSG Bloqueio",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "ConsultaCliente2": {
@@ -3413,11 +3397,11 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "7b658220-dfbb-4e04-813a-0c704ca7473a",
+  "versionId": "d5ef283f-2fca-42cb-8ab5-33b0399d1358",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "8d6a81903df25a55a6d6de4c95daa350b74c6e400ef38aa531aa16f227a14a4d"
