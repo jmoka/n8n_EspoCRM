@@ -487,8 +487,8 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -2352,
-        416
+        -2320,
+        368
       ],
       "id": "95a56c0a-b877-4217-9228-7a2488be04f3",
       "name": "Cadastrar MSG",
@@ -572,7 +572,7 @@
           "conditions": [
             {
               "keyName": "Telefone",
-              "keyValue": "={{ $('When Executed by Another Workflow').item.json.data[0].NumeroCliente }}"
+              "keyValue": "={{ JSON.parse($json.dados.camposIniciais).key.participant.split(\"@\")[0] }}"
             }
           ]
         }
@@ -3491,7 +3491,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "06c42881-5182-430d-8cc1-487730fc4553",
+  "versionId": "10639bcb-d9e6-4a16-9ca5-f47b179586c9",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "8d6a81903df25a55a6d6de4c95daa350b74c6e400ef38aa531aa16f227a14a4d"
