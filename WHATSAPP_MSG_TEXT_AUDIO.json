@@ -55,7 +55,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $('camposIniciais').item.json.dados.menssageType }}",
+                    "leftValue": "={{ $('camposIniciais').item.json.menssageType }}",
                     "rightValue": "conversation",
                     "operator": {
                       "type": "string",
@@ -80,7 +80,7 @@
                 "conditions": [
                   {
                     "id": "525dca6c-905f-4b95-8d06-c2bdeaa85d14",
-                    "leftValue": "={{ $('desativar').item.json.body.data.message.audioMessage.mimetype }}",
+                    "leftValue": "={{ $('camposIniciais').item.json.minetype }}",
                     "rightValue": "audio/ogg; codecs=opus",
                     "operator": {
                       "type": "string",
@@ -129,7 +129,7 @@
             {
               "id": "249b28ed-8ded-4946-943d-00c3990b3fad",
               "name": "NumeroCliente",
-              "value": "={{ $json.body.data.key.participant.split(\"@\")[0] }}",
+              "value": "={{ $json.body.data.key.remoteJid.split(\"@\")[0] }}",
               "type": "string"
             },
             {
@@ -436,7 +436,7 @@
           "conditions": [
             {
               "keyName": "Telefone",
-              "keyValue": "={{ $('Se a MSG e minha ou do Cliente').item.json.dados.NumeroCliente.split(\"@\")[0] }}"
+              "keyValue": "={{ $('ConsultaCliente').item.json.Telefone }}"
             }
           ]
         }
@@ -444,7 +444,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -3552,
+        -3520,
         304
       ],
       "id": "6bdbde19-ba29-4c9f-a452-4a7c313e09a1",
@@ -465,7 +465,7 @@
           "fieldValues": [
             {
               "fieldId": "key_numero_cliente",
-              "fieldValue": "={{ $('Se a MSG e minha ou do Cliente').item.json.dados.NumeroCliente.split(\"@\")[0] }}"
+              "fieldValue": "={{ $('Consulta Cliente').item.json.Telefone }}"
             },
             {
               "fieldId": "mensagem",
@@ -562,7 +562,7 @@
           "conditions": [
             {
               "keyName": "Telefone",
-              "keyValue": "={{ $json.dados.NumeroCliente.split(\"@\")[0] }}"
+              "keyValue": "={{ $json.NumeroCliente }}"
             }
           ]
         }
@@ -621,7 +621,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -4000,
+        -4176,
         320
       ],
       "id": "027bf7e5-0dfa-4307-8170-56b8d448f33f",
@@ -941,7 +941,7 @@
             },
             {
               "fieldId": "key_Empresa",
-              "fieldValue": "={{ $('camposIniciais').item.json.dados.numeroInstancia.split(\"@\")[0] }}"
+              "fieldValue": "={{ $('camposIniciais').item.json.numeroInstancia.split(\"@\")[0] }}"
             }
           ]
         }
@@ -1020,7 +1020,7 @@
                 "conditions": [
                   {
                     "id": "77567a07-a8b6-42b1-a056-b77fc9a23b74",
-                    "leftValue": "={{ $json.Telefone }}",
+                    "leftValue": "={{ $('camposIniciais').item.json.NumeroCliente }}",
                     "rightValue": "",
                     "operator": {
                       "type": "string",
@@ -1045,7 +1045,7 @@
                 "conditions": [
                   {
                     "id": "a7c2259d-582f-4fb8-a160-ff04a9d8ca4b",
-                    "leftValue": "={{ $json.Telefone }}",
+                    "leftValue": "={{ $('camposIniciais').item.json.NumeroCliente }}",
                     "rightValue": "",
                     "operator": {
                       "type": "string",
@@ -3472,11 +3472,11 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "c98d3aa8-7cbb-4abc-b555-bc03f457f488",
+  "versionId": "19814100-e38a-4ab6-9a9a-b148d69acff4",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "8d6a81903df25a55a6d6de4c95daa350b74c6e400ef38aa531aa16f227a14a4d"
